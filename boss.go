@@ -74,7 +74,7 @@ func initBoss() {
 	setHelloMsg()
 }
 
-func main() {
+func RunBoss() {
 
 	initBoss()
 
