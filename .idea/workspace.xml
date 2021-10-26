@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9e5668b6-40b7-488d-8e54-0810b12e7d53" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/boss.go" beforeDir="false" afterPath="$PROJECT_DIR$/boss.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boss_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/boss_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
