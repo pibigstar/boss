@@ -1,8 +1,10 @@
 package main
 
+import "github.com/pibigstar/boss/online"
+
 func main() {
 
-	RunHttp(8099)
+	online.RunHttp(8099)
 
 	// 1. 读取可用用户
 

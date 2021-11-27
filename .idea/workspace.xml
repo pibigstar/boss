@@ -4,8 +4,27 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9e5668b6-40b7-488d-8e54-0810b12e7d53" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="f6b088b3-20e5-4e3e-bbec-41217498bcb7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/config/config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/boss.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/core_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/211.txt" beforeDir="false" afterPath="$PROJECT_DIR$/offline/211.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/985.txt" beforeDir="false" afterPath="$PROJECT_DIR$/offline/985.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boss.go" beforeDir="false" afterPath="$PROJECT_DIR$/offline/boss.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boss_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/company.txt" beforeDir="false" afterPath="$PROJECT_DIR$/offline/company.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cookie.txt" beforeDir="false" afterPath="$PROJECT_DIR$/offline/cookie.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/online/db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/online/db_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http.go" beforeDir="false" afterPath="$PROJECT_DIR$/online/http.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jobs.txt" beforeDir="false" afterPath="$PROJECT_DIR$/offline/jobs.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.go" beforeDir="false" afterPath="$PROJECT_DIR$/online/model.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vo.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/vo.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,10 +45,8 @@
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
   </component>
-  <component name="ProjectId" id="1zzFUBd7E4WruLbB4VCepwuNdAE" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectId" id="215AzppJ1jyYFWraLpW5pQhaMIR" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -44,49 +61,35 @@
     <property name="go.formatter.settings.were.checked" value="true" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.modules.go.list.on.any.changes.was.set" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="watcher.settings" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/core" />
+      <recent name="$PROJECT_DIR$/config" />
+      <recent name="$PROJECT_DIR$/constant" />
+      <recent name="$PROJECT_DIR$/offline" />
+      <recent name="$PROJECT_DIR$/utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build github.com/pibigstar/boss (1)">
-    <configuration name="go build github.com/pibigstar/boss (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager">
+    <configuration name="TestListRecommend in github.com/pibigstar/boss/core" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="boss" />
-      <working_directory value="$PROJECT_DIR$" />
+      <working_directory value="$PROJECT_DIR$/core" />
+      <root_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
-      <package value="github.com/pibigstar/boss" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/main.go" />
-      <method v="2" />
-    </configuration>
-    <configuration name="go build github.com/pibigstar/boss" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="boss" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="FILE" />
-      <package value="github.com/pibigstar/boss" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/boss.go" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestListUser in github.com/pibigstar/boss" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="boss" />
-      <working_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="github.com/pibigstar/boss" />
+      <package value="github.com/pibigstar/boss/core" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestListUser\E$" />
+      <pattern value="^\QTestListRecommend\E$" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Build.go build github.com/pibigstar/boss (1)" />
-        <item itemvalue="Go Build.go build github.com/pibigstar/boss" />
-        <item itemvalue="Go Test.TestListUser in github.com/pibigstar/boss" />
+        <item itemvalue="Go Test.TestListRecommend in github.com/pibigstar/boss/core" />
       </list>
     </recent_temporary>
   </component>

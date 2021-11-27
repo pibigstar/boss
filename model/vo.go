@@ -1,4 +1,4 @@
-package main
+package model
 
 type GeekListResp struct {
 	Code    int    `json:"code"`
