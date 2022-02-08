@@ -1,1 +1,1 @@
-{  "online": true,  "mysql": {    "host": "127.0.0.1",    "port": 3306,    "db": "boss",    "username": "root",    "password": "123456"  }}
+{  "online": true,  "mysql": {    "host": "10.0.224.14",    "port": 3306,    "db": "boss",    "username": "root",    "password": "V^t7J6UF"  }}
