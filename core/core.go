@@ -14,7 +14,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/pibigstar/boss/config"
 	"github.com/pibigstar/boss/constant"
 	"github.com/pibigstar/boss/logs"
 	"github.com/pibigstar/boss/model"
@@ -35,13 +34,13 @@ var (
 	}
 )
 
-// 招人
+// Hiring 招人
 func (boss *Boss) Hiring() {
 	var (
 		wg sync.WaitGroup
 	)
 
-	var hiring = func(job Job) {
+	var hiring = func(job model.Job) {
 		// 10秒一次，防止被反爬
 		t := time.NewTicker(time.Duration(job.IntervalTime) * time.Second)
 		// 进行3分钟的候选人选择
@@ -86,7 +85,7 @@ func (boss *Boss) Hiring() {
 
 	for _, job := range boss.Jobs {
 		wg.Add(1)
-		go func(job Job) {
+		go func(job model.Job) {
 			defer wg.Done()
 			hiring(job)
 		}(job)
@@ -147,7 +146,7 @@ func (boss *Boss) helloAndRequestResumes(jobId string, requestResumeTime int, ge
 // 根据JobId搜索候选人
 func (boss *Boss) searchGeekByJobId(jobId, jobName string) ([]*model.Geek, error) {
 	var geeks []*model.Geek
-	geekList, err := boss.ListRecommend(jobId)
+	geekList, err := boss.listRecommend(jobId)
 	if err != nil {
 		return nil, err
 	}
@@ -182,52 +181,58 @@ func (boss *Boss) selectGeek(geek *model.Geek, jobName string) bool {
 	}
 	//  是否是本科
 	if geek.GeekCard.GeekDegree == "本科" {
-		geek.Weight += 3
+		geek.Weight += boss.ScoreConfig.Undergrad
 	}
 	//  是否是硕士
 	if geek.GeekCard.GeekDegree == "硕士" {
-		geek.Weight += 4
+		geek.Weight += boss.ScoreConfig.Master
 	}
 	// 是否是211
-	if utils.IsContains(config.School211, geek.GeekCard.GeekEdu.School) {
-		geek.Weight += 3
+	if schools, ok := boss.ExtraInfo[constant.School211]; ok {
+		if utils.IsContains(schools, geek.GeekCard.GeekEdu.School) {
+			geek.Weight += boss.ScoreConfig.Score211
+		}
 	}
 	// 是否是985
-	if utils.IsContains(config.School985, geek.GeekCard.GeekEdu.School) {
-		geek.Weight += 4
+	if schools, ok := boss.ExtraInfo[constant.School985]; ok {
+		if utils.IsContains(schools, geek.GeekCard.GeekEdu.School) {
+			geek.Weight += boss.ScoreConfig.Score958
+		}
 	}
 	// 是否在大厂
-	for _, w := range geek.GeekCard.GeekWorks {
-		if utils.IsContains(config.GoodCompany, w.Company) {
-			geek.Weight += 5
-			break
+	if companies, ok := boss.ExtraInfo[constant.GoodCompany]; ok {
+		for _, w := range geek.GeekCard.GeekWorks {
+			if utils.IsContains(companies, w.Company) {
+				geek.Weight += boss.ScoreConfig.GoodCompany
+				break
+			}
 		}
 	}
 	// 工作年限大于3年
 	workStr := strings.ReplaceAll(geek.GeekCard.GeekWorkYear, "年", "")
 	if years, err := strconv.Atoi(workStr); err == nil && years >= 3 {
-		geek.Weight += 3
+		geek.Weight += boss.ScoreConfig.WorkTime
 	}
 	// 年龄
 	ageStr := strings.ReplaceAll(geek.GeekCard.AgeDesc, "岁", "")
-	if age, err := strconv.Atoi(ageStr); err == nil && age >= 26 && age <= 35 {
-		geek.Weight += 2
+	if age, err := strconv.Atoi(ageStr); err == nil && age >= 35 {
+		geek.Weight += boss.ScoreConfig.AgeOver35
 	}
 	// 在职-月内到岗
 	if strings.Contains(geek.GeekCard.ApplyStatusDesc, "月内到岗") {
-		geek.Weight += 2
+		geek.Weight += boss.ScoreConfig.OnlineWork
 	}
 	// 离职-随时到岗
 	if strings.Contains(geek.GeekCard.ApplyStatusDesc, "离职") {
-		geek.Weight += 3
+		geek.Weight += boss.ScoreConfig.OfflineWork
 	}
 	// 今日活跃
 	if strings.Contains(geek.ActiveTimeDesc, "今日活跃") {
-		geek.Weight += 1
+		geek.Weight += boss.ScoreConfig.ActiveToday
 	}
 	// 刚刚活跃
 	if strings.Contains(geek.ActiveTimeDesc, "刚刚活跃") {
-		geek.Weight += 2
+		geek.Weight += boss.ScoreConfig.ActiveMinute
 	}
 	return true
 }
@@ -321,7 +326,7 @@ func (boss *Boss) requestResumes(name, securityId string) error {
 }
 
 // 获取推荐牛人列表
-func (boss *Boss) ListRecommend(jobId string) ([]*model.Geek, error) {
+func (boss *Boss) listRecommend(jobId string) ([]*model.Geek, error) {
 	uri := fmt.Sprintf("https://www.zhipin.com/wapi/zprelation/interaction/bossGetGeek?")
 	urlQueue := url.Values{}
 	urlQueue.Add("gender", "0")
@@ -351,7 +356,7 @@ func (boss *Boss) ListRecommend(jobId string) ([]*model.Geek, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		logs.Println("ListRecommend request", err.Error())
+		logs.Println("listRecommend request", err.Error())
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -378,8 +383,7 @@ func (boss *Boss) addHeader(req *http.Request) {
 	req.Header.Add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36")
 }
 
-// 设置自动打招呼语
-// 根据Job设置
+// SetHelloMsg 根据Job设置自动打招呼语
 func (boss *Boss) SetHelloMsg() {
 	// 开启自动打招呼
 	uri := "https://www.zhipin.com/wapi/zpchat/greeting/updateGreeting"
@@ -407,7 +411,7 @@ func (boss *Boss) SetHelloMsg() {
 
 	resp, err = http.DefaultClient.Do(req)
 	if err != nil {
-		logs.Println("setHelloMsg get", err.Error())
+		logs.Println("SetHelloMsg get", err.Error())
 		return
 	}
 	defer resp.Body.Close()
@@ -448,8 +452,8 @@ func (boss *Boss) SetHelloMsg() {
 	}
 }
 
-//  TODO: 扫码登录,暂不支持
-func (boss *Boss) GetQRId(ctx context.Context) {
+// TODO: 扫码登录,暂不支持
+func (boss *Boss) getQRId(ctx context.Context) {
 	// 取qrId
 	uri := "https://login.zhipin.com/wapi/zppassport/captcha/randkey"
 	values := url.Values{}
@@ -519,7 +523,7 @@ func (boss *Boss) setCookie(qrId string) error {
 	return nil
 }
 
-// 获取job列表
+// ListJobs 获取job列表
 func (boss *Boss) ListJobs() []*model.Job {
 	uri := "https://www.zhipin.com/wapi/zpjob/job/data/list?"
 	values := url.Values{}

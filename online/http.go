@@ -32,7 +32,7 @@ func InitRouter(r gin.RouterGroup) {
 	r.GET("/users", func(ctx *gin.Context) {
 		users, err := listUser()
 		if err != nil {
-			ctx.Error(err)
+			ErrorResponse(ctx, err)
 			return
 		}
 		ctx.JSON(http.StatusOK, users)
@@ -42,9 +42,21 @@ func InitRouter(r gin.RouterGroup) {
 	r.GET("/jobs", func(ctx *gin.Context) {
 		userJobs, err := listUserJob()
 		if err != nil {
-			ctx.Error(err)
+			ErrorResponse(ctx, err)
 			return
 		}
 		ctx.JSON(http.StatusOK, userJobs)
+	})
+
+	// 额外信息
+	r.GET("/extraInfo", func(ctx *gin.Context) {
+		extraInfo := listSchoolAndCompany()
+		ctx.JSON(http.StatusOK, extraInfo)
+	})
+}
+
+func ErrorResponse(ctx *gin.Context, err error) {
+	ctx.JSON(200, map[string]interface{}{
+		"err": err.Error(),
 	})
 }

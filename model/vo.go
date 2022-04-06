@@ -329,11 +329,6 @@ type JobListResp struct {
 	} `json:"zpData"`
 }
 
-type Job struct {
-	JobId   string
-	JobName string
-}
-
 type RequestResumesResp struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`

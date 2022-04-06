@@ -12,14 +12,17 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/pibigstar/boss/core"
 	"github.com/pibigstar/boss/logs"
+	"github.com/pibigstar/boss/model"
 )
 
 var boss = &core.Boss{
-	Jobs: make(map[string]core.Job),
+	Jobs:        make(map[string]model.Job),
+	ScoreConfig: core.DefaultScoreConfig(),
+	ExtraInfo:   make(map[string][]string),
 }
 
 func RunBoss() {
-	initBoss()
+	initConfig()
 	if len(boss.Jobs) == 0 {
 		inputJobs()
 	}

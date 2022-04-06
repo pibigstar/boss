@@ -1,34 +1,64 @@
 package core
 
-import "sync"
+import (
+	"encoding/json"
+	"log"
+	"sync"
 
-type Bosser interface {
-	Hiring() error
-}
+	"github.com/pibigstar/boss/model"
+)
 
 type Boss struct {
-	talked sync.Map
-	Cookie string
-	Jobs   map[string]Job
+	talked      sync.Map
+	Cookie      string
+	User        model.User           // 当前用户相关信息（仅在线情况下有值）
+	Jobs        map[string]model.Job // 招聘岗位相关配置
+	ScoreConfig model.ScoreConfig    // 候选人筛选打分配置
+	ExtraInfo   map[string][]string  // 985,211,大厂信息
 }
 
-type Job struct {
-	JobId             string `json:"jobId"`
-	JobName           string `json:"jobName"`
-	IntervalTime      int    `json:"intervalTime"`      // 间隔时间，多久抓一次简历列表，单位s默认10s
-	SpiderTime        int    `json:"spiderTime"`        // 抓取时长，单位 s，默认 180s
-	HelloNum          int    `json:"helloNum"`          // 对几个人打招呼
-	QueueMaxNum       int    `json:"queueMaxNum"`       // 最多可以有多少个候选人
-	RequestResumeTime int    `json:"requestResumeTime"` // 请求简历时长,单位 hour, 默认 1h
+func NewBoss(user model.User, Jobs map[string]model.Job, extraInfo map[string][]string) *Boss {
+	boss := &Boss{
+		Cookie:      user.Cookie,
+		Jobs:        Jobs,
+		ExtraInfo:   extraInfo,
+		ScoreConfig: DefaultScoreConfig(),
+	}
+	if user.ScoreConfig != "" {
+		err := json.Unmarshal([]byte(user.ScoreConfig), &boss.ScoreConfig)
+		if err != nil {
+			log.Println("unmarshal score config", user.ScoreConfig)
+		}
+	}
+	return boss
 }
 
-func DefaultJob(jobId, jobName string) Job {
-	j := Job{
+// DefaultJob 基础的Job配置信息
+func DefaultJob(jobId, jobName string) model.Job {
+	return model.Job{
+		JobId:             jobId,
+		JobName:           jobName,
 		IntervalTime:      10,
 		SpiderTime:        180,
 		HelloNum:          3,
 		QueueMaxNum:       10,
 		RequestResumeTime: 1,
 	}
-	return j
+}
+
+// DefaultScoreConfig 最基础的分值配置信息
+func DefaultScoreConfig() model.ScoreConfig {
+	return model.ScoreConfig{
+		Score211:     3,
+		Score958:     4,
+		GoodCompany:  5,
+		Undergrad:    3,
+		Master:       4,
+		WorkTime:     3,
+		AgeOver35:    -4,
+		OnlineWork:   2,
+		OfflineWork:  3,
+		ActiveToday:  1,
+		ActiveMinute: 2,
+	}
 }

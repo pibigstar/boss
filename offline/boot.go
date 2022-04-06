@@ -9,7 +9,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/pibigstar/boss/config"
+	"github.com/pibigstar/boss/constant"
+
 	"github.com/pibigstar/boss/core"
 )
 
@@ -22,7 +23,7 @@ var (
 	jobsFile      = "jobs.txt"
 )
 
-func initBoss() {
+func initConfig() {
 	// 设置当前运行目录
 	setFilePath()
 	// 读取cookie信息
@@ -64,7 +65,7 @@ func readSchool() {
 		if c == io.EOF {
 			break
 		}
-		config.School985 = append(config.School985, string(a))
+		boss.ExtraInfo[constant.School985] = append(boss.ExtraInfo[constant.School985], string(a))
 	}
 
 	bs, _ = ioutil.ReadFile(school211File)
@@ -74,7 +75,7 @@ func readSchool() {
 		if c == io.EOF {
 			break
 		}
-		config.School211 = append(config.School211, string(a))
+		boss.ExtraInfo[constant.School211] = append(boss.ExtraInfo[constant.School211], string(a))
 	}
 }
 
@@ -86,7 +87,7 @@ func readCompany() {
 		if c == io.EOF {
 			break
 		}
-		config.GoodCompany = append(config.GoodCompany, string(a))
+		boss.ExtraInfo[constant.GoodCompany] = append(boss.ExtraInfo[constant.GoodCompany], string(a))
 	}
 }
 

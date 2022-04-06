@@ -30,12 +30,6 @@ var (
 	defaultCfg = "config.json"
 )
 
-var (
-	School985   []string
-	School211   []string
-	GoodCompany []string
-)
-
 func GetConfig() *Config {
 	return cfg
 }

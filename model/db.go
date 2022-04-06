@@ -1,10 +1,11 @@
-package online
+package model
 
 type User struct {
-	Id       int    `json:"id"`
-	UserName string `json:"username"`
-	Cookie   string `json:"cookie"`
-	Status   int    `json:"status"`
+	Id          int    `json:"id"`
+	UserName    string `json:"username"`
+	Cookie      string `json:"cookie"`
+	Status      int    `json:"status"`
+	ScoreConfig string `json:"scoreConfig"`
 }
 
 type Job struct {
