@@ -3,6 +3,9 @@ package online
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+
+	"github.com/pibigstar/boss/model"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pibigstar/boss/logs"
@@ -30,7 +33,7 @@ func RunHttp(port int) {
 func InitRouter(r gin.RouterGroup) {
 	// 用户列表
 	r.GET("/users", func(ctx *gin.Context) {
-		users, err := listUser()
+		users, err := listAllUser()
 		if err != nil {
 			ErrorResponse(ctx, err)
 			return
@@ -40,7 +43,7 @@ func InitRouter(r gin.RouterGroup) {
 
 	// 用户的职位列表
 	r.GET("/jobs", func(ctx *gin.Context) {
-		userJobs, err := listUserJob()
+		userJobs, err := listAllUserJob()
 		if err != nil {
 			ErrorResponse(ctx, err)
 			return
@@ -52,6 +55,80 @@ func InitRouter(r gin.RouterGroup) {
 	r.GET("/extraInfo", func(ctx *gin.Context) {
 		extraInfo := listSchoolAndCompany()
 		ctx.JSON(http.StatusOK, extraInfo)
+	})
+
+	// 新增修改用户
+	r.POST("/addOrUpdateUser", func(ctx *gin.Context) {
+		var user model.User
+		if err := ctx.ShouldBind(&user); err != nil {
+			ErrorResponse(ctx, err)
+			return
+		}
+		err := addOrUpdateUser(user)
+		if err != nil {
+			ErrorResponse(ctx, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, "添加成功")
+	})
+
+	// 新增修改用户招聘岗位
+	r.POST("/addOrUpdateUserJob", func(ctx *gin.Context) {
+		var job model.Job
+		if err := ctx.ShouldBind(&job); err != nil {
+			ErrorResponse(ctx, err)
+			return
+		}
+		err := addOrUpdateUserJob(job)
+		if err != nil {
+			ErrorResponse(ctx, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, "添加成功")
+	})
+
+	// 获取用户已配置的职位列表
+	r.GET("/listUserJob", func(ctx *gin.Context) {
+		idStr := ctx.Query("userId")
+		userId, err := strconv.Atoi(idStr)
+		if err != nil {
+			ErrorResponse(ctx, err)
+			return
+		}
+		jobs, err := listUserJobs(userId)
+		if err != nil {
+			ErrorResponse(ctx, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, jobs)
+	})
+
+	// 从Boss中获取用户配置的职位列表
+	r.GET("/listUserJobFromBoss", func(ctx *gin.Context) {
+		idStr := ctx.Query("userId")
+		userId, err := strconv.Atoi(idStr)
+		if err != nil {
+			ErrorResponse(ctx, err)
+			return
+		}
+		jobs, err := listUserJobsFromBoss(userId)
+		if err != nil {
+			ErrorResponse(ctx, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, jobs)
+	})
+
+	// 重新进行一次招聘
+	r.GET("/restart", func(ctx *gin.Context) {
+		idStr := ctx.Query("userId")
+		userId, err := strconv.Atoi(idStr)
+		if err != nil {
+			ErrorResponse(ctx, err)
+			return
+		}
+		restart(userId)
+		ctx.JSON(http.StatusOK, "重启成功")
 	})
 }
 

@@ -8,10 +8,13 @@ import (
 )
 
 var boss = &Boss{
-	Jobs: map[string]model.Job{
-		"bbdc011c6eb717ad33Z83tq6FlE~": DefaultJob("bbdc011c6eb717ad33Z83tq6FlE~", "Golang"),
+	User: model.User{
+		UserName: "测试",
 	},
-	Cookie: `_bl_uid=LFkzUq2jsv2wg9ob25C4bvhd9mOj; lastCity=101020100; wd_guid=adaabd69-ccd3-4d22-baad-668677ef2d08; historyState=state; __g=-; Hm_lvt_194df3105ad7148dcf2b98a91b5e727a=1636854418,1636943029; __f=be66bc1f7784b2763f280eb60bb76060; wt2=DXTJ7-i6IHj_J9FsrRjYjF1KIVbYKRfN1XkGURumT1KOSeGBR5snQEJ1Rlc22WgkzYluXIbjfipXuX9wml-7CrA~~; geek_zp_token=V1QtMhFuf52VxgXdNqyBgcICu46DrXwg~~; Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a=1637548544; __l=l=/www.zhipin.com/web/boss/index&r=&g=&s=3&friend_source=0&s=3&friend_source=0; acw_tc=0bdccfc616379059065057791e135eeae0fa2fd6b2bb6fb798502fc03adb60; zp_token=V1QtMhFuf52VxgXdNqyBQYLi217T_Qxw~~; __c=1636943029; __a=47595245.1586530028.1591944613.1636943029.479.4.26.470`,
+	Jobs: map[string]model.Job{
+		"3b7ba39cd5535e7a1n1_09u4FVVT": DefaultJob("3b7ba39cd5535e7a1n1_09u4FVVT", "Golang"),
+	},
+	Cookie: `lastCity=101020100; wd_guid=adaabd69-ccd3-4d22-baad-668677ef2d08; historyState=state; __g=-; Hm_lvt_194df3105ad7148dcf2b98a91b5e727a=1649315746; Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a=1649315755; wt2=DUwxBaTxqlL90CsvpBBCc2N8cbEEgQxeI5QvQT0JiFo--YbRwsI3McHplaItKUTMlyXR7mEPe0jfOdsCnHPOTBQ~~; wbg=1; acw_tc=0bdd34c216493211266456865e01aa4f03b9fdd5cff26ed36e19f7c43b704d; zp_token=V1QtMhFuf52VxgXdNtxh4aKyKx7DPfwg~~; __l=l=/www.zhipin.com/web/boss/job/list&s=3&friend_source=0&s=3&friend_source=0; _dd_s=logs=1&id=4a9715ef-473a-4f88-9517-198f879fd962&created=1649322326781&expire=1649323271898; __c=1649315744; __a=47595245.1586530028.1636943029.1649315744.497.5.11.488`,
 }
 
 func TestMain(m *testing.M) {

@@ -6,7 +6,7 @@ import (
 
 // "gen model -dns "mysql:root:123456@tcp(127.0.0.1:3306)/boss" -t user"
 func TestListUser(t *testing.T) {
-	users, err := listUser()
+	users, err := listAllUser()
 	if err != nil {
 		t.Error(err)
 	}

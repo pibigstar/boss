@@ -8,8 +8,8 @@ import (
 
 func main() {
 	if config.GetConfig().Online {
+		online.CronRun()
 		online.RunHttp(8080)
-		online.RunOnline()
 	} else {
 		offline.RunBoss()
 	}

@@ -1,8 +1,6 @@
 package core
 
 import (
-	"encoding/json"
-	"log"
 	"sync"
 
 	"github.com/pibigstar/boss/model"
@@ -17,18 +15,16 @@ type Boss struct {
 	ExtraInfo   map[string][]string  // 985,211,大厂信息
 }
 
-func NewBoss(user model.User, Jobs map[string]model.Job, extraInfo map[string][]string) *Boss {
+type Option func(boss *Boss)
+
+func NewBoss(user model.User, options ...Option) *Boss {
 	boss := &Boss{
 		Cookie:      user.Cookie,
-		Jobs:        Jobs,
-		ExtraInfo:   extraInfo,
+		User:        user,
 		ScoreConfig: DefaultScoreConfig(),
 	}
-	if user.ScoreConfig != "" {
-		err := json.Unmarshal([]byte(user.ScoreConfig), &boss.ScoreConfig)
-		if err != nil {
-			log.Println("unmarshal score config", user.ScoreConfig)
-		}
+	for _, o := range options {
+		o(boss)
 	}
 	return boss
 }

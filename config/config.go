@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/pibigstar/boss/logs"
 )
 

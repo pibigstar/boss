@@ -1,10 +1,13 @@
 package core
 
 import (
+	"compress/flate"
+	"compress/gzip"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -84,6 +87,7 @@ func (boss *Boss) Hiring() {
 	}
 
 	for _, job := range boss.Jobs {
+		fmt.Printf("开始招聘用户:【%s】的【%s】职位 \n", boss.User.UserName, job.JobName)
 		wg.Add(1)
 		go func(job model.Job) {
 			defer wg.Done()
@@ -91,6 +95,8 @@ func (boss *Boss) Hiring() {
 		}(job)
 	}
 	wg.Wait()
+
+	logs.Printf("用户:【%s】招聘已结束 \n", boss.User.UserName)
 }
 
 // 打招呼并轮询请求简历
@@ -263,7 +269,10 @@ func (boss *Boss) hello(jobId string, geekId int, encryptGeekId, lid, securityId
 		return err
 	}
 	defer resp.Body.Close()
-	bs, _ := ioutil.ReadAll(resp.Body)
+
+	body := switchContentEncoding(resp)
+	bs, _ := ioutil.ReadAll(body)
+
 	str := string(bs)
 	if strings.Contains(str, "今日沟通已达上限") {
 		return maxLimit
@@ -290,7 +299,9 @@ func (boss *Boss) acceptResumes(mid, securityId string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	bs, _ := ioutil.ReadAll(resp.Body)
+
+	body := switchContentEncoding(resp)
+	bs, _ := ioutil.ReadAll(body)
 	fmt.Println(string(bs))
 	return nil
 }
@@ -310,7 +321,9 @@ func (boss *Boss) requestResumes(name, securityId string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	bs, _ := ioutil.ReadAll(resp.Body)
+
+	body := switchContentEncoding(resp)
+	bs, _ := ioutil.ReadAll(body)
 	if strings.Contains(string(bs), "好友关系校验失败") {
 		return notFriend
 	}
@@ -360,7 +373,8 @@ func (boss *Boss) listRecommend(jobId string) ([]*model.Geek, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	bs, _ := ioutil.ReadAll(resp.Body)
+	body := switchContentEncoding(resp)
+	bs, _ := ioutil.ReadAll(body)
 	if strings.Contains(string(bs), "登录状态已失效") {
 		return nil, notLogin
 	}
@@ -372,12 +386,27 @@ func (boss *Boss) listRecommend(jobId string) ([]*model.Geek, error) {
 	return temp.ZpData.GeekList, nil
 }
 
+func switchContentEncoding(res *http.Response) io.Reader {
+	bodyReader := res.Body
+	var err error
+	switch res.Header.Get("Content-Encoding") {
+	case "gzip":
+		bodyReader, err = gzip.NewReader(res.Body)
+		if err != nil {
+			logs.Println("gzip", err.Error())
+		}
+	case "deflate":
+		bodyReader = flate.NewReader(res.Body)
+	}
+	return bodyReader
+}
+
 func (boss *Boss) addHeader(req *http.Request) {
 	req.Header.Add("cookie", boss.Cookie)
 	req.Header.Add("content-type", "application/x-www-form-urlencoded")
-	req.Header.Add("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3")
+	req.Header.Add("accept", "application/json, text/plain, */*")
 	req.Header.Add("accept-encoding", "gzip, deflate, br")
-	req.Header.Add("accept-language", "zh-CN,zh;q=0.9,en;q=0.8")
+	req.Header.Add("accept-language", "zh-CN,zh;q=0.9,zh-TW;q=0.8,en-US;q=0.7,en;q=0.6")
 	req.Header.Add("cache-control", "max-age=0")
 	req.Header.Add("upgrade-insecure-requests", "1")
 	req.Header.Add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36")
@@ -400,10 +429,12 @@ func (boss *Boss) SetHelloMsg() {
 	}
 	defer resp.Body.Close()
 
-	bs, _ := ioutil.ReadAll(resp.Body)
+	body := switchContentEncoding(resp)
+	bs, _ := ioutil.ReadAll(body)
 	if strings.Contains(string(bs), "Success") {
 		logs.Println("已开启自动打招呼")
 	}
+
 	// 获取职位列表
 	uri = "https://www.zhipin.com/wapi/zpchat/greeting/job/get"
 	req, _ = http.NewRequest(http.MethodGet, uri, nil)
@@ -416,7 +447,8 @@ func (boss *Boss) SetHelloMsg() {
 	}
 	defer resp.Body.Close()
 
-	bs, _ = ioutil.ReadAll(resp.Body)
+	body = switchContentEncoding(resp)
+	bs, _ = ioutil.ReadAll(body)
 	var t *model.JobHelloMsg
 	err = json.Unmarshal(bs, &t)
 	if err != nil {
@@ -443,12 +475,13 @@ func (boss *Boss) SetHelloMsg() {
 			logs.Println("save job hell msg", err.Error())
 			continue
 		}
-		defer resp.Body.Close()
 
-		bs, _ := ioutil.ReadAll(resp.Body)
+		body := switchContentEncoding(resp)
+		bs, _ := ioutil.ReadAll(body)
 		if strings.Contains(string(bs), "Success") {
 			logs.Printf("设置职位: %s 的打招呼语成功", job.JobName)
 		}
+		resp.Body.Close()
 	}
 }
 
@@ -468,7 +501,8 @@ func (boss *Boss) getQRId(ctx context.Context) {
 	}
 	defer resp.Body.Close()
 
-	bs, _ := ioutil.ReadAll(resp.Body)
+	body := switchContentEncoding(resp)
+	bs, _ := ioutil.ReadAll(body)
 	var msg *model.QRMsg
 	if err = json.Unmarshal(bs, &msg); err != nil {
 		logs.Println("unmarshal qr msg", err.Error())
@@ -542,7 +576,8 @@ func (boss *Boss) ListJobs() []*model.Job {
 	}
 	defer resp.Body.Close()
 
-	bs, _ := ioutil.ReadAll(resp.Body)
+	body := switchContentEncoding(resp)
+	bs, _ := ioutil.ReadAll(body)
 
 	var jResp *model.JobListResp
 	if err = json.Unmarshal(bs, &jResp); err != nil {
