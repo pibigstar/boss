@@ -39,7 +39,7 @@ func listAllUser(userId ...int) ([]model.User, error) {
 
 // 获取用户当前的招聘岗位配置
 func listAllUserJob() (map[int]map[string]model.Job, error) {
-	rows, err := config.GetDB().Query("select userId,jobId,jobName,intervalTime," +
+	rows, err := config.GetDB().Query("select id,userId,jobId,jobName,intervalTime," +
 		"spiderTime,helloNum,queueMaxNum,requestResumeTime from jobs where isDel = 0")
 	if err != nil {
 		return nil, err
@@ -49,6 +49,7 @@ func listAllUserJob() (map[int]map[string]model.Job, error) {
 	for rows.Next() {
 		var j model.Job
 		err = rows.Scan(
+			&j.Id,
 			&j.UserId,
 			&j.JobId,
 			&j.JobName,
@@ -164,8 +165,6 @@ func addOrUpdateUserJob(job model.Job) error {
 	return nil
 }
 
-// 显示用户当前Job与可配置的Job
-
 // 获取用户已配置的Job
 func listUserJobs(userId int) ([]model.Job, error) {
 	sql := fmt.Sprintf("select userId,jobId,jobName,intervalTime,"+
@@ -196,10 +195,10 @@ func listUserJobs(userId int) ([]model.Job, error) {
 	return jobs, nil
 }
 
-// 获取用户Boss中设置的Job
+// 根据id获取用户配置
 func getUser(userId int) (*model.User, error) {
 	u := &model.User{}
-	sql := fmt.Sprintf("select id,username,cookie,status,scoreConfig from user where id = %d", userId)
+	sql := fmt.Sprintf("select id,username,cookie,status,scoreConfig,feishuUrl from user where id = %d", userId)
 	err := config.GetDB().QueryRow(sql).Scan(&u.Id, &u.UserName, &u.Cookie, &u.Status, &u.ScoreConfig)
 	if err != nil {
 		logs.Println("getUser", err.Error())

@@ -5,19 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f6b088b3-20e5-4e3e-bbec-41217498bcb7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constant/consts.go" beforeDir="false" afterPath="$PROJECT_DIR$/constant/consts.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/boss.go" beforeDir="false" afterPath="$PROJECT_DIR$/core/boss.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/core.go" beforeDir="false" afterPath="$PROJECT_DIR$/core/core.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/core_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/core/core_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/online/boss.go" beforeDir="false" afterPath="$PROJECT_DIR$/online/boss.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/online/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/online/db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/online/db_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/online/db_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/online/http.go" beforeDir="false" afterPath="$PROJECT_DIR$/online/http.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
